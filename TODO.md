@@ -1,0 +1,4 @@
+- Skip button which decrements play count and selects another item
+- Format selector (shuffle either all or only particular formats)
+- Pretty it up
+- Deploy somewhere

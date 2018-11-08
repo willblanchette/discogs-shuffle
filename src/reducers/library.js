@@ -1,11 +1,12 @@
 
 import { FETCH_LIBRARY, RECEIVE_LIBRARY } from '../actions/library'
 
-export default function library(state = {}, action) {
+export default function library(state = {fetching: true}, action) {
   switch (action.type) {
     case FETCH_LIBRARY:
         return {
-            fetching: true
+          ...state,
+          fetching: true
         };
 
     case RECEIVE_LIBRARY:
@@ -17,8 +18,7 @@ export default function library(state = {}, action) {
 
     default:
       return {
-        ...state,
-        fetching: true
+        ...state
       };
   }
 }

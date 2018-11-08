@@ -9,7 +9,7 @@ export function fetchLibrary(username, forceRefresh) {
         let releases = [];
         let page = 1;
         let pages;
-        let library = storage.get('library');
+        const library = storage.get('library') || {};
         const now = (new Date()).getTime();
 
         if (forceRefresh || !library || library.username !== username || now - library.lastUpdated >= updateInterval) {
@@ -21,15 +21,14 @@ export function fetchLibrary(username, forceRefresh) {
                         releases = [...releases, ...json.data.releases];
                     });
                 page++;
-            } while(page < pages);
+            } while(page <= pages);
 
-            library = {
-                lastUpdated: (new Date()).getTime(),
-                releases,
-                username
-            };
+            library.lastUpdated = (new Date()).getTime();
+            library.releases = releases;
             storage.set('library', library);
         }
+
+        library.username = username;
 
         resolve(library);
     });
@@ -43,4 +42,18 @@ export async function setUser(user) {
 
 export async function fetchUser() {
     return storage.get('user');
+}
+
+export async function fetchShuffledItem(username) {
+    const library = await fetchLibrary(username);
+    const storedCounts = storage.get('playCounts') || [];
+    const playCounts = library.releases.map(r => storedCounts.find(s => s.releaseId === r.id) || {releaseId: r.id, count: 0});
+    const minCount = Math.min(...playCounts.map(p => p.count));
+    const minPlayCounts = playCounts.filter(p => p.count === minCount);
+    const randomItem = minPlayCounts[Math.floor(Math.random() * minPlayCounts.length)];
+    const randomRelease = library.releases.find(r => r.id === randomItem.releaseId);
+
+    randomItem.count ++;
+    storage.set('playCounts', playCounts)
+    return randomRelease;
 }

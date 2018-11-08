@@ -16,7 +16,7 @@ export function handleFetchLibrary(username, forceRefresh) {
             .then(library => {
                 dispatch(receiveLibrary(library));
             });
-    }
+    };
 }
 
 function receiveLibrary(library) {

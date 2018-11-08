@@ -2,9 +2,9 @@ import * as storage from './storage';
 import fetchJsonp from 'fetch-jsonp';
 
 const discogsApiUrl = 'https://api.discogs.com';
-const updateInterval = 30000;
+const updateInterval = 60 * 60 * 1000;
 
-export function fetchLibrary(username) {
+export function fetchLibrary(username, forceRefresh) {
     const promise = new Promise(async (resolve, reject) => {
         let releases = [];
         let page = 1;
@@ -12,7 +12,7 @@ export function fetchLibrary(username) {
         let library = storage.get('library');
         const now = (new Date()).getTime();
 
-        if (!library || library.username !== username || now - library.lastUpdated >= updateInterval) {
+        if (forceRefresh || !library || library.username !== username || now - library.lastUpdated >= updateInterval) {
             do {
                 await fetchJsonp(`${discogsApiUrl}/users/${username}/collection/folders/0/releases?per_page=100&page=${page}`)
                     .then(response => response.json())

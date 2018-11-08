@@ -9,10 +9,10 @@ function fetchLibrary() {
     };
 }
 
-export function handleFetchLibrary(username) {
+export function handleFetchLibrary(username, forceRefresh) {
     return dispatch => {
         dispatch(fetchLibrary(username));
-        api.fetchLibrary(username)
+        api.fetchLibrary(username, forceRefresh)
             .then(library => {
                 dispatch(receiveLibrary(library));
             });

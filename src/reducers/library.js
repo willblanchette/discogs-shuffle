@@ -5,7 +5,6 @@ export default function library(state = {}, action) {
   switch (action.type) {
     case FETCH_LIBRARY:
         return {
-            ...state,
             fetching: true
         };
 

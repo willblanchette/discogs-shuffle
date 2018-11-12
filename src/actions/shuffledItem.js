@@ -10,10 +10,10 @@ function fetchShuffledItem() {
 }
 
 
-export function handleFetchShuffledItem(username) {
+export function handleFetchShuffledItem(username, format) {
     return dispatch => {
         dispatch(fetchShuffledItem());
-        api.fetchShuffledItem(username)
+        api.fetchShuffledItem(username, format)
             .then(shuffledItem => {
                 dispatch(receiveShuffledItem(shuffledItem));
             });

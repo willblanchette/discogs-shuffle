@@ -57,13 +57,14 @@ export async function fetchUser() {
     return storage.get('user');
 }
 
-export async function fetchShuffledItem(username) {
+export async function fetchShuffledItem(username, format) {
     const library = await fetchLibrary(username);
-    let unplayed = library.releases.filter(r => !r.metadata.played);
+    const releases = library.releases.filter(r => !format || r.basic_information.formats.find(f => f.name === format));
+    let unplayed = releases.filter(r => !r.metadata.played);
 
     if (!unplayed.length) {
-        library.releases.forEach(r => r.metadata.played = false);
-        unplayed = library.releases();
+        releases.forEach(r => r.metadata.played = false);
+        unplayed = releases;
     }
 
     const randomRelease = unplayed[Math.floor(Math.random() * unplayed.length)];

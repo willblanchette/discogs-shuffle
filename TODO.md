@@ -1,6 +1,5 @@
-- Skip button which decrements play count and selects another item
-- Format selector (shuffle either all or only particular formats)
 - Clear button to reset user / library (with confirmation, settings view?)
 - Edit counts manually (new view) with search / filtering
 - Pretty it up
+- Babel transpile
 - Deploy somewhere

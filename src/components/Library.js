@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { handleFetchLibrary } from '../actions/library';
-import { handleFetchShuffledItem } from '../actions/shuffledItem';
+import { handleFetchShuffledItem, handleSkip } from '../actions/shuffledItem';
 
 class Library extends Component {
   constructor() {
     super();
     this.refresh = this.refresh.bind(this);
     this.shuffle = this.shuffle.bind(this);
+    this.skip = this.skip.bind(this);
   }
 
   componentDidMount () {
@@ -33,13 +34,14 @@ class Library extends Component {
                 {this.props.shuffledItem && this.props.shuffledItem.id
                   ? (
                     <div>
-                      {this.props.shuffledItem.basic_information.artists[0].name}: {this.props.shuffledItem.basic_information.title} ({this.props.shuffledItem.basic_information.formats[0].name})
+                      {this.props.shuffledItem.id}: {this.props.shuffledItem.basic_information.artists[0].name}: {this.props.shuffledItem.basic_information.title} ({this.props.shuffledItem.basic_information.formats[0].name})
                     </div>
                   )
                   : null}
               </div>
               <button onClick={this.refresh}>Refresh</button>
               <button onClick={this.shuffle}>Shuffle</button>
+              {this.props.shuffledItem.id && <button onClick={this.skip}>Skip</button>}
             </div>
           )}
       </div>
@@ -52,6 +54,11 @@ class Library extends Component {
 
   shuffle() {
     this.props.dispatch(handleFetchShuffledItem(this.props.user.username));
+  }
+
+  skip() {
+    this.props.dispatch(handleSkip(this.props.shuffledItem));
+    this.shuffle();
   }
 }
 

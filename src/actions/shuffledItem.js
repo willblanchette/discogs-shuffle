@@ -26,3 +26,9 @@ function receiveShuffledItem(shuffledItem) {
         shuffledItem
     };
 }
+
+export function handleSkip(release) {
+    return dispatch => {
+        api.skipItem(release);
+    }
+}

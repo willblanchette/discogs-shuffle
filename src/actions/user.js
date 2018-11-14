@@ -2,7 +2,6 @@ import * as api from '../utils/api';
 
 export const FETCH_USER = 'FETCH_USER';
 export const RECEIVE_USER = 'RECEIVE_USER';
-export const SET_USER = 'SET_USER';
 
 function fetchUser() {
     return {
@@ -27,15 +26,8 @@ function receiveUser(user) {
     };
 }
 
-function setUser() {
-    return {
-        type: SET_USER,
-    };
-}
-
 export function handleSetUser(user) {
     return dispatch => {
-        dispatch(setUser());
         api.setUser(user);
         dispatch(handleFetchUser());
     }

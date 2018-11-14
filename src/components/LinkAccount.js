@@ -26,7 +26,6 @@ class LinkAccount extends Component {
   render() {
     return (
       <div>
-        <h1>Link Account</h1>
         <form onSubmit={this.handleSubmit}>
           <input type="text" value={this.state.user.username} onChange={this.handleChange}/>
           <button>Save</button>

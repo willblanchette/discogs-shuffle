@@ -25,3 +25,10 @@ function receiveLibrary(library) {
         library
     };
 }
+
+export function handleClearLibrary() {
+    return dispatch => {
+        api.clearLibrary();
+        dispatch(receiveLibrary(undefined));
+    };
+}

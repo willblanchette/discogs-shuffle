@@ -7,3 +7,7 @@ export function get(key) {
 
     return value ? JSON.parse(value) : undefined;
 }
+
+export function remove(key) {
+    localStorage.removeItem(key);
+}

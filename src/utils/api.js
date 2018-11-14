@@ -49,8 +49,12 @@ export function fetchLibrary(username, forceRefresh) {
     return promise;
 }
 
+export async function clearLibrary() {
+    storage.remove('library');
+}
+
 export async function setUser(user) {
-    storage.set('user', user);
+    user ? storage.set('user', user) : storage.remove('user');
 }
 
 export async function fetchUser() {

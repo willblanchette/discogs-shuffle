@@ -1,4 +1,4 @@
-- Clear button to reset user / library (with confirmation, settings view?)
+
 - Edit counts manually (new view) with search / filtering
 - Pretty it up
 - Babel transpile

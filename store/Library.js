@@ -1,42 +1,49 @@
-import { observable } from 'mobx';
+import { action, observable } from 'mobx';
 import { AsyncStorage } from 'react-native';
 
 const discogsApiUrl = 'https://api.discogs.com';
-const updateInterval = 60 * 60 * 1000 * 24;
 
 class LibraryStore {
-    @observable library = undefined;
+    @observable releases;
+    @observable username;
     @observable fetching = false;
 
-    constructor() {
-        this.fetch('wblanchette');
+    constructor () {
+        AsyncStorage.getItem('username').then(username => {
+            this.username = username;
+            this.fetch();
+        });
     }
 
-    async fetch (username, forceRefresh) {
+    @action async setUsername (username) {
+        AsyncStorage.setItem('username', username);
+        this.username = username;
+    }
+
+    @action async fetch (forceRefresh) {
         this.fetching = true;
 
         let releases = [];
         let page = 1;
         let pages;
         const library = await AsyncStorage.getItem('library') || {releases: []};
-        const now = (new Date()).getTime();
 
-        if (forceRefresh || !library || library.username !== username || now - library.lastUpdated >= updateInterval) {
+        if (this.username && (forceRefresh || !library.lastFetched)) {
             do {
-                const url = `${discogsApiUrl}/users/${username}/collection/folders/0/releases?per_page=100&page=${page}`;
+                const url = `${discogsApiUrl}/users/${this.username}/collection/folders/0/releases?per_page=100&page=${page}`;
                 await fetch(url)
                     .then(async response => {
                         const json = await response.json();
                         return json;
                     })
                     .then(json => {
-                        pages = 1; //json.pagination.pages
+                        pages = json.pagination.pages
                         releases = [...releases, ...json.releases];
                     });
                 page++;
             } while(page <= pages);
 
-            library.lastUpdated = (new Date()).getTime();
+            library.lastFetched = (new Date()).getTime();
 
             releases.forEach(release => {
                 const existing = library.releases.find(r => r.id === release.id);
@@ -51,12 +58,12 @@ class LibraryStore {
                     }
                 }
             });
+
             library.releases = releases;
         }
 
-        library.username = username;
         AsyncStorage.setItem('library', library);
-        this.library = library;
+        this.releases = library.releases;
         this.fetching = false;
     };
 }

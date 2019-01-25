@@ -26,7 +26,7 @@ class LibraryStore {
         let releases = [];
         let page = 1;
         let pages;
-        const library = await AsyncStorage.getItem('library') || {releases: []};
+        const library = JSON.parse((await AsyncStorage.getItem('library'))) || {releases: []};
 
         if (this.username && (forceRefresh || !library.lastFetched)) {
             do {
@@ -62,7 +62,12 @@ class LibraryStore {
             library.releases = releases;
         }
 
-        AsyncStorage.setItem('library', library);
+        try {
+            await AsyncStorage.setItem('library', JSON.stringify(library));
+        } catch(e) {
+            // TODO: Handle error
+            console.error('Error persisting library:', e);
+        }
         this.releases = library.releases;
         this.fetching = false;
     };

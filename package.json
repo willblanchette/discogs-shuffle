@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
+    "@expo/vector-icons": "^9.0.0",
     "expo": "^32.0.0",
     "fetch-jsonp": "^1.1.3",
     "mobx": "^5.9.0",

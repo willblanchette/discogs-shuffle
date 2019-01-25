@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 11185,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
   "expoServerNgrokUrl": "https://pc-hmf.anonymous.discogs-shuffle.exp.direct",
   "packagerNgrokUrl": "https://packager.pc-hmf.anonymous.discogs-shuffle.exp.direct",
-  "ngrokPid": 11212
+  "ngrokPid": 13683
 }

@@ -3,21 +3,17 @@ import { Container, Header, Icon, Input, Item, Picker,  Text } from 'native-base
 import React, { Component } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
 
-import LibraryStore from '../store/Library';
+import  { withStoreContext } from '../StoreContext';
 
 const blacklistedFormats = ['All Media'];
 const sortNames = ['Artist', 'Title'];
 const sortMethods = {
   Title: (a, b) => a.basic_information.title.localeCompare(b.basic_information.title),
   Artist: (a, b) => a.basic_information.artists[0].name.localeCompare(b.basic_information.artists[0].name),
-}
+};
 
 @observer
-export default class LibraryScreen extends Component {
-  static navigationOptions = {
-    title: 'Library',
-  };
-
+class LibraryScreen extends Component {
   constructor(props) {
     super(props);
 
@@ -32,14 +28,12 @@ export default class LibraryScreen extends Component {
     this.filterReleases();
   }
 
-  onPressItem = item => {
-    this.props.navigation.navigate('Release', { item });
+  onPressItem = release => {
+    this.props.navigation.navigate('Release', { release });
   };
 
   filterReleases() {
-
-
-    const filteredReleases = LibraryStore.releases.filter(release => {
+    const filteredReleases = this.props.store.library.releases.filter(release => {
       return (
         (this.search(release.basic_information.title) || release.basic_information.artists.find(a => this.search(a.name)))
         && (!this.state.format || release.basic_information.formats.find(f => f.name === this.state.format))
@@ -73,10 +67,10 @@ export default class LibraryScreen extends Component {
     let releases;
     let formats = [];
 
-    if (LibraryStore.releases) {
+    if (this.props.store.library.releases) {
       releases = this.filterReleases();
 
-      LibraryStore.releases.forEach(r => {
+      this.props.store.library.releases.forEach(r => {
         r.basic_information.formats.forEach(f => {
           if (!formats.includes(f.name) && !blacklistedFormats.includes(f.name)) {
             formats.push(f.name);
@@ -86,7 +80,7 @@ export default class LibraryScreen extends Component {
     }
 
     return (
-      <Container style={[styles.container]}>
+      <Container>
         <Header searchBar>
           <Item>
             <Icon active name="search"></Icon>
@@ -108,29 +102,31 @@ export default class LibraryScreen extends Component {
             </Picker>
           </Item>
         </Header>
-        {!LibraryStore.releases
-          ? <ActivityIndicator size="large"></ActivityIndicator>
-          : <FlatList
-              refreshing={LibraryStore.fetching}
-              onRefresh={() => LibraryStore.fetch(true)}
-              data={releases}
-              keyExtractor={(item, index)=> `${index}-${item.id}`}
-              renderItem={({item}) => (
-                <TouchableHighlight onPress={this.onPressItem.bind(this, item)}>
-                  <View >
-                    <Text style={{
-                      borderBottomWidth: 1,
-                      padding: 10,
-                    }}>
-                      {item.basic_information.artists[0].name},
-                      {item.basic_information.title}
-                      {' (' + item.basic_information.formats.map(f => f.name).join(', ') + ')'}
-                    </Text>
-                  </View>
-                </TouchableHighlight>)}
-              >
-              </FlatList>
-        }
+        <Container style={[styles.container]}>
+          {!this.props.store.library.releases
+            ? <ActivityIndicator size="large"></ActivityIndicator>
+            : <FlatList
+                refreshing={this.props.store.library.fetching}
+                onRefresh={() => this.props.store.library.fetch(true)}
+                data={releases}
+                keyExtractor={(item, index)=> `${index}-${item.id}`}
+                renderItem={({item}) => (
+                  <TouchableHighlight onPress={this.onPressItem.bind(this, item)}>
+                    <View >
+                      <Text style={{
+                        borderBottomWidth: 1,
+                        padding: 10,
+                      }}>
+                        {item.basic_information.artists[0].name},
+                        {item.basic_information.title}
+                        {' (' + item.basic_information.formats.map(f => f.name).join(', ') + ')'}
+                      </Text>
+                    </View>
+                  </TouchableHighlight>)}
+                >
+                </FlatList>
+          }
+        </Container>
       </Container>
     );
   }
@@ -142,3 +138,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   }
 })
+
+export default withStoreContext(LibraryScreen);

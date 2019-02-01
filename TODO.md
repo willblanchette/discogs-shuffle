@@ -1,0 +1,20 @@
+- Tab bar
+    - Disable library and shuffle until username is entered
+- Library screen
+    - Tidy up item rows
+        - Add album thumb
+    - Clear search button
+- Release screen
+    - Album art
+    - Title
+    - Format/s
+    - Artist/s
+    - Play button
+    - Play history list
+        - Sorted by date
+- Settings Screen
+    - Username
+- Housekeeping
+    - Lint code
+    - Normalize whitespace
+    - Clean up unused tests

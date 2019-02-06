@@ -1,6 +1,7 @@
+import AutoHeightImage from 'react-native-auto-height-image';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { Button, FlatList, Image, Text, TouchableHighlight, View } from 'react-native';
+import { Button, Dimensions, FlatList, ScrollView, Text, TouchableHighlight, View } from 'react-native';
 
 import { withStoreContext }  from '../StoreContext';
 
@@ -24,7 +25,14 @@ class ReleaseScreen extends React.Component {
       });
 
     return (
-      <View>
+      <ScrollView>
+        <Text>{release.basic_information.artists[0].name}</Text>
+        <Text>{release.basic_information.title}</Text>
+        <Text>{' (' + release.basic_information.formats.map(f => f.name).join(', ') + ')'}</Text>
+        <Text>{history.length} Plays</Text>
+        <AutoHeightImage
+          width={Dimensions.get('window').width}
+          source={{uri: release.basic_information.cover_image}} />
         <Button title='Play' onPress={() => this.props.store.history.play(release)}></Button>
         <Text>{history.length} Plays</Text>
         <FlatList
@@ -44,7 +52,7 @@ class ReleaseScreen extends React.Component {
             </TouchableHighlight>)}
           >
           </FlatList>
-      </View>
+      </ScrollView>
     );
   }
 }

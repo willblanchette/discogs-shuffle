@@ -4,6 +4,10 @@
     - Tidy up item rows
         - Add album thumb
     - Clear search button
+    - Sort by last / most / least played
+    - Searching for "80" not finding "'80s"
+- Shuffle screen
+    - Fancy animation before redirecting
 - Release screen
     - Album art
     - Title

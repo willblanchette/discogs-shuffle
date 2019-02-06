@@ -10,7 +10,7 @@ class LibraryStore {
 
     constructor () {
         AsyncStorage.getItem('username').then(username => {
-            this.username = username;
+            this.username = 'wblanchette'; //username;
             this.fetch();
         });
     }

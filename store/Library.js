@@ -1,7 +1,9 @@
 import { action, observable } from 'mobx';
 import { AsyncStorage } from 'react-native';
 
-const discogsApiUrl = 'https://api.discogs.com';
+import { DiscogsAPI } from '../util/DiscogsAPI';
+
+const discogs = new DiscogsAPI();
 
 class LibraryStore {
     @observable releases;
@@ -30,15 +32,15 @@ class LibraryStore {
 
         if (this.username && (forceRefresh || !library.lastFetched)) {
             do {
-                const url = `${discogsApiUrl}/users/${this.username}/collection/folders/0/releases?per_page=100&page=${page}`;
-                await fetch(url)
-                    .then(async response => {
-                        const json = await response.json();
-                        return json;
-                    })
-                    .then(json => {
-                        pages = json.pagination.pages
-                        releases = [...releases, ...json.releases];
+                const url = `users/${this.username}/collection/folders/0/releases`;
+                const params = {
+                    per_page: 100,
+                    page,
+                };
+                await discogs.get(url, params)
+                    .then(result => {
+                        pages = result.pagination.pages
+                        releases = [...releases, ...result.releases];
                     });
                 page++;
             } while(page <= pages);

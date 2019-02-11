@@ -1,11 +1,11 @@
 - Tab bar
     - Disable library and shuffle until username is entered
 - Library screen
-    - Tidy up item rows
-        - Add album thumb
     - Clear search button
     - Sort by last / most / least played
     - Searching for "80" not finding "'80s"
+    - Taps / swipes not registering
+    - Show loading indicator when refreshing (x of y or %)
 - Shuffle screen
     - Fancy animation before redirecting
 - Release screen

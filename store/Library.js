@@ -46,21 +46,6 @@ class LibraryStore {
             } while(page <= pages);
 
             library.lastFetched = (new Date()).getTime();
-
-            releases.forEach(release => {
-                const existing = library.releases.find(r => r.id === release.id);
-
-                if (existing) {
-                    release.metadata = existing.metadata;
-                } else {
-                    release.metadata = {
-                        playedCount: 0,
-                        skippedCount: 0,
-                        played: false
-                    }
-                }
-            });
-
             library.releases = releases;
         }
 

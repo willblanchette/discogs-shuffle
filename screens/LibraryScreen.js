@@ -1,12 +1,18 @@
 import { observer } from 'mobx-react';
 import { Container, Header, Icon, Input, Item, Picker,  Text } from 'native-base';
 import React, { Component } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
-
+import { ActivityIndicator, FlatList, Image, StyleSheet, TouchableHighlight, View } from 'react-native';
+import AutoHeightImage from 'react-native-auto-height-image';
 import  { withStoreContext } from '../StoreContext';
+
 
 const blacklistedFormats = ['All Media'];
 const sortNames = ['Artist', 'Title'];
+const formatIcons = {
+  cassette: require('../assets/images/icons/cassette.png'),
+  cd: require('../assets/images/icons/cd.png'),
+  vinyl: require('../assets/images/icons/vinyl.png'),
+}
 const sortMethods = {
   Title: (a, b) => a.basic_information.title.localeCompare(b.basic_information.title),
   Artist: (a, b) => a.basic_information.artists[0].name.localeCompare(b.basic_information.artists[0].name),
@@ -29,7 +35,9 @@ class LibraryScreen extends Component {
   }
 
   onPressItem = release => {
-    this.props.navigation.navigate('Release', { release });
+    setTimeout(() => {
+      this.props.navigation.navigate('Release', { release });
+    }, 10);
   };
 
   filterReleases() {
@@ -81,9 +89,8 @@ class LibraryScreen extends Component {
 
     return (
       <Container>
-        <Header searchBar>
-          <Item>
-            <Icon active name="search"></Icon>
+        <Header searchBar style={[styles.header]}>
+          <Item style={[styles.headerItem]}>
             <Input placeholder="Search" onChangeText={terms => this.setState({terms})}></Input>
             <Picker
               mode="dropdown"
@@ -102,7 +109,7 @@ class LibraryScreen extends Component {
             </Picker>
           </Item>
         </Header>
-        <Container style={[styles.container]}>
+        <Container style={[styles.list]}>
           {!this.props.store.library.releases
             ? <ActivityIndicator size="large"></ActivityIndicator>
             : <FlatList
@@ -110,21 +117,38 @@ class LibraryScreen extends Component {
                 onRefresh={() => this.props.store.library.fetch(true)}
                 data={releases}
                 keyExtractor={(item, index)=> `${index}-${item.id}`}
-                renderItem={({item}) => (
-                  <TouchableHighlight onPress={this.onPressItem.bind(this, item)}>
-                    <View >
-                      <Text style={{
-                        borderBottomWidth: 1,
-                        padding: 10,
-                      }}>
-                        {item.basic_information.artists[0].name},
-                        {item.basic_information.title}
-                        {' (' + item.basic_information.formats.map(f => f.name).join(', ') + ')'}
-                      </Text>
+                renderItem={({item}) => {
+                  const formats = item.basic_information.formats
+                    .map(f => f.name)
+                    .map(f => f.toLowerCase(),)
+                    .filter(f => !!formatIcons[f]);
+
+                  return (<TouchableHighlight underlayColor='#ffffff10' onPress={this.onPressItem.bind(this, item)}>
+                    <View style={[styles.listItem]} >
+                      <AutoHeightImage
+                        width={50}
+                        style={[styles.listItemImage]}
+                        source={{uri: item.basic_information.cover_image}} />
+                      <View style={[styles.listItemMeta]}>
+                        <Text style={[styles.listItemText, {fontWeight: 'bold'}]}>
+                          {item.basic_information.artists[0].name}
+                        </Text>
+                        <Text style={[styles.listItemText, {color: '#ccc'}]}>
+                          {item.basic_information.title}
+                        </Text>
+                      </View>
+                      <View style={[styles.formatIcons]}>
+                        {formats.map(f => (
+                          <View key={f} style={[styles.formatIcon]}>
+                            <AutoHeightImage
+                              width={30}
+                              source={formatIcons[f]} />
+                          </View>
+                        ))}
+                      </View>
                     </View>
-                  </TouchableHighlight>)}
-                >
-                </FlatList>
+                  </TouchableHighlight>)
+                }}/>
           }
         </Container>
       </Container>
@@ -133,10 +157,51 @@ class LibraryScreen extends Component {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  header: {
+    backgroundColor: '#111',
+    padding: 0,
+  },
+  headerItem: {
+    padding: 10,
+  },
+  list: {
+    paddingLeft: 20,
+    paddingRight: 20,
     flex: 1,
     justifyContent: 'center',
-  }
-})
+    backgroundColor: '#111',
+  },
+  listItem: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    borderBottomColor: '#ffffff19',
+    borderBottomWidth: 2,
+    flexDirection: 'row'
+  },
+  listItemText: {
+    color: '#fff',
+  },
+  listItemImage: {
+    marginRight: 20,
+    borderColor: '#fff',
+    borderWidth: 1,
+    minHeight: 50,
+  },
+  listItemMeta: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  listFormatIcon: {
+    borderColor: '#fff',
+    borderWidth: 1,
+  },
+  formatIcons: {
+    flexDirection: 'column',
+    marginLeft: 20,
+  },
+  formatIcon: {
+    marginBottom: 5,
+  },
+});
 
 export default withStoreContext(LibraryScreen);

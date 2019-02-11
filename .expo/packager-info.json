@@ -3,7 +3,7 @@
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://pc-hmf.wblanchette.discogs-shuffle.exp.direct",
+  "packagerNgrokUrl": "https://packager.pc-hmf.wblanchette.discogs-shuffle.exp.direct",
+  "ngrokPid": 891
 }

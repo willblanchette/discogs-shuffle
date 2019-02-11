@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
-import { Container, Header, Icon, Input, Item, Picker,  Text } from 'native-base';
+import { Container, Header, Icon, Input, Item,  Text } from 'native-base';
 import React, { Component } from 'react';
-import { ActivityIndicator, FlatList, Image, StyleSheet, TouchableHighlight, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, Picker, StyleSheet, TextInput, TouchableHighlight, View } from 'react-native';
 import  { withStoreContext } from '../StoreContext';
 
 
@@ -88,29 +88,37 @@ class LibraryScreen extends Component {
 
     return (
       <Container>
-        <Header searchBar style={[styles.header]}>
-          <Item style={[styles.headerItem]}>
-            <Input placeholder="Search" onChangeText={terms => this.setState({terms})}></Input>
+        <View style={[styles.header]}>
+          <View style={[styles.headerTextInputWrapper]}>
+            <TextInput placeholder="Search" placeholderTextColor='#ffffff19' onChangeText={terms => this.setState({terms})} style={[styles.headerTextInput]}></TextInput>
+          </View>
+          <View style={[styles.headerPickerWrapper]}>
             <Picker
               mode="dropdown"
+              style={[styles.headerPicker]}
+              textStyle={styles.headerPickerItem}
               selectedValue={this.state.format}
               onValueChange={this.onFormatChange.bind(this)}
             >
               <Picker.Item label="All" value={undefined}></Picker.Item>
               {formats.map(format => <Picker.Item label={format} value={format} key={format}></Picker.Item>)}
             </Picker>
+          </View>
+          <View style={[styles.headerPickerWrapper]}>
             <Picker
               mode="dropdown"
+              style={[styles.headerPicker]}
+              textStyle={styles.headerPickerItem}
               selectedValue={this.state.sort}
               onValueChange={this.onSortChange.bind(this)}
             >
               {sortNames.map(sort => <Picker.Item label={sort} value={sort} key={sort}></Picker.Item>)}
             </Picker>
-          </Item>
-        </Header>
+          </View>
+        </View>
         <Container style={[styles.list]}>
           {!this.props.store.library.releases
-            ? <ActivityIndicator size="large"></ActivityIndicator>
+            ? <ActivityIndicator color='#4a99f0' size="large"></ActivityIndicator>
             : <FlatList
                 refreshing={this.props.store.library.fetching}
                 onRefresh={() => this.props.store.library.fetch(true)}
@@ -128,27 +136,29 @@ class LibraryScreen extends Component {
                     .map(f => f.toLowerCase(),)
                     .filter(f => !!formatIcons[f]);
 
-                  return (<TouchableHighlight underlayColor='#ffffff10' onPress={this.onPressItem.bind(this, item)}>
-                    <View style={[styles.listItem]} >
-                      <Image
-                        style={[styles.listItemImage]}
-                        source={{uri: item.basic_information.cover_image}} />
-                      <View style={[styles.listItemMeta]}>
-                        <Text style={[styles.listItemText, {fontWeight: 'bold'}]} numberOfLines={1}>
-                          {item.basic_information.artists[0].name}
-                        </Text>
-                        <Text style={[styles.listItemText, {color: '#ccc'}]} numberOfLines={1}>
-                          {item.basic_information.title}
-                        </Text>
-                      </View>
-                      <View style={[styles.formatIcons]}>
-                        {formats.map((f, index) => (
-                          <View key={`${f}:${index}`} style={[styles.formatIcon]}>
-                            <Image
-                              style={styles.listItemFormatIcon}
-                              source={formatIcons[f]} />
-                          </View>
-                        ))}
+                  return (<TouchableHighlight underlayColor='#333' onPress={this.onPressItem.bind(this, item)}>
+                    <View style={[styles.listItem]}>
+                      <View style={[styles.listItemInner]}>
+                        <Image
+                          style={[styles.listItemImage]}
+                          source={{uri: item.basic_information.cover_image}} />
+                        <View style={[styles.listItemMeta]}>
+                          <Text style={[styles.listItemText, {fontWeight: 'bold'}]} numberOfLines={1}>
+                            {item.basic_information.artists[0].name}
+                          </Text>
+                          <Text style={[styles.listItemText, {color: '#ccc'}]} numberOfLines={1}>
+                            {item.basic_information.title}
+                          </Text>
+                        </View>
+                        <View style={[styles.formatIcons]}>
+                          {formats.map((f, index) => (
+                            <View key={`${f}:${index}`} style={[styles.formatIcon]}>
+                              <Image
+                                style={styles.listItemFormatIcon}
+                                source={formatIcons[f]} />
+                            </View>
+                          ))}
+                        </View>
                       </View>
                     </View>
                   </TouchableHighlight>)
@@ -162,26 +172,53 @@ class LibraryScreen extends Component {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#111',
-    padding: 0,
+    flex: 0,
+    flexDirection: 'row',
+    backgroundColor: '#00000000',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
   },
-  headerItem: {
-    padding: 10,
+  headerTextInputWrapper: {
+    flex: 2,
+  },
+  headerTextInput: {
+    color: '#fff',
+    backgroundColor: '#111',
+    height: 50,
+    paddingLeft: 20,
+    fontSize: 18,
+  },
+  headerPickerWrapper: {
+    flex: 1,
+    borderLeftWidth: 1,
+    borderLeftColor: '#333',
+  },
+  headerPicker: {
+    color: '#fff',
+    backgroundColor: '#111',
+    height: 50,
+  },
+  headerPickerItem: {
+    fontSize: 20,
   },
   list: {
-    paddingLeft: 20,
-    paddingRight: 20,
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#111',
   },
   listItem: {
+    paddingLeft: 20,
+    paddingRight: 20,
     height: 92,
+    flex: 1,
+  },
+  listItemInner: {
+    borderBottomColor: '#333',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    flex: 1,
     paddingTop: 20,
     paddingBottom: 20,
-    borderBottomColor: '#ffffff19',
-    borderBottomWidth: 2,
-    flexDirection: 'row'
   },
   listItemText: {
     color: '#fff',

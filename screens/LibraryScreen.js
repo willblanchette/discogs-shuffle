@@ -1,9 +1,10 @@
 import { observer } from 'mobx-react';
-import { Container, Header, Icon, Input, Item,  Text } from 'native-base';
+import { Container } from 'native-base';
 import React, { Component } from 'react';
-import { ActivityIndicator, FlatList, Image, Picker, StyleSheet, TextInput, TouchableHighlight, View } from 'react-native';
-import  { withStoreContext } from '../StoreContext';
+import { ActivityIndicator, Button, FlatList, Image, Picker, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
+import  { withStoreContext } from '../StoreContext';
 
 const blacklistedFormats = ['All Media'];
 const sortNames = ['Artist', 'Title'];
@@ -37,6 +38,11 @@ class LibraryScreen extends Component {
     setTimeout(() => {
       this.props.navigation.navigate('Release', { release });
     }, 10);
+  };
+
+  onPressClearSearch = () => {
+    console.log('clear');
+    this.setState({terms: ''});
   };
 
   filterReleases() {
@@ -90,7 +96,23 @@ class LibraryScreen extends Component {
       <Container>
         <View style={[styles.header]}>
           <View style={[styles.headerTextInputWrapper]}>
-            <TextInput placeholder="Search" placeholderTextColor='#ffffff19' onChangeText={terms => this.setState({terms})} style={[styles.headerTextInput]}></TextInput>
+            <TextInput
+              placeholder='Search'
+              placeholderTextColor='#ffffff19'
+              onChangeText={terms => this.setState({terms})}
+              autoCorrect={false}
+              autoComplete={false}
+              autoCapitalize='none'
+              value={this.state.terms}
+              style={[styles.headerTextInput]}></TextInput>
+            {this.state.terms.length > 0 &&
+              <TouchableHighlight
+                onPress={this.onPressClearSearch.bind(this)}
+                style={[styles.headerClearSearchButton]}
+              >
+                <Ionicons name='ios-close' size={35} color='#333' />
+              </TouchableHighlight>
+            }
           </View>
           <View style={[styles.headerPickerWrapper]}>
             <Picker
@@ -180,6 +202,8 @@ const styles = StyleSheet.create({
   },
   headerTextInputWrapper: {
     flex: 2,
+    display: 'flex',
+    flexDirection: 'row',
   },
   headerTextInput: {
     color: '#fff',
@@ -187,11 +211,21 @@ const styles = StyleSheet.create({
     height: 50,
     paddingLeft: 20,
     fontSize: 18,
+    flex: 1,
   },
   headerPickerWrapper: {
     flex: 1,
     borderLeftWidth: 1,
     borderLeftColor: '#333',
+    position: 'relative',
+  },
+  headerClearSearchButton: {
+    flex: 0,
+    backgroundColor: '#111',
+    height: 50,
+    justifyContent: 'center',
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   headerPicker: {
     color: '#fff',
@@ -237,6 +271,7 @@ const styles = StyleSheet.create({
   listItemMeta: {
     flex: 1,
     flexDirection: 'column',
+    paddingTop: 4,
   },
   listFormatIcon: {
     borderColor: '#fff',

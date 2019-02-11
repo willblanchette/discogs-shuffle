@@ -2,7 +2,6 @@ import { observer } from 'mobx-react';
 import { Container, Header, Icon, Input, Item, Picker,  Text } from 'native-base';
 import React, { Component } from 'react';
 import { ActivityIndicator, FlatList, Image, StyleSheet, TouchableHighlight, View } from 'react-native';
-import AutoHeightImage from 'react-native-auto-height-image';
 import  { withStoreContext } from '../StoreContext';
 
 
@@ -117,6 +116,12 @@ class LibraryScreen extends Component {
                 onRefresh={() => this.props.store.library.fetch(true)}
                 data={releases}
                 keyExtractor={(item, index)=> `${index}-${item.id}`}
+                maxToRenderPerBatch={25}
+                updateCellsBatchingPeriod={10}
+                initialNumToRender={200}
+                removeClippedSubviews={true}
+                windowSize={50}
+                getItemLayout={(data, index) => ({length: 92, offset: 92 * index, index})}
                 renderItem={({item}) => {
                   const formats = item.basic_information.formats
                     .map(f => f.name)
@@ -125,23 +130,22 @@ class LibraryScreen extends Component {
 
                   return (<TouchableHighlight underlayColor='#ffffff10' onPress={this.onPressItem.bind(this, item)}>
                     <View style={[styles.listItem]} >
-                      <AutoHeightImage
-                        width={50}
+                      <Image
                         style={[styles.listItemImage]}
                         source={{uri: item.basic_information.cover_image}} />
                       <View style={[styles.listItemMeta]}>
-                        <Text style={[styles.listItemText, {fontWeight: 'bold'}]}>
+                        <Text style={[styles.listItemText, {fontWeight: 'bold'}]} numberOfLines={1}>
                           {item.basic_information.artists[0].name}
                         </Text>
-                        <Text style={[styles.listItemText, {color: '#ccc'}]}>
+                        <Text style={[styles.listItemText, {color: '#ccc'}]} numberOfLines={1}>
                           {item.basic_information.title}
                         </Text>
                       </View>
                       <View style={[styles.formatIcons]}>
-                        {formats.map(f => (
-                          <View key={f} style={[styles.formatIcon]}>
-                            <AutoHeightImage
-                              width={30}
+                        {formats.map((f, index) => (
+                          <View key={`${f}:${index}`} style={[styles.formatIcon]}>
+                            <Image
+                              style={styles.listItemFormatIcon}
                               source={formatIcons[f]} />
                           </View>
                         ))}
@@ -172,6 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#111',
   },
   listItem: {
+    height: 92,
     paddingTop: 20,
     paddingBottom: 20,
     borderBottomColor: '#ffffff19',
@@ -182,10 +187,15 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   listItemImage: {
+    width: 50,
+    height: 50,
     marginRight: 20,
     borderColor: '#fff',
     borderWidth: 1,
-    minHeight: 50,
+  },
+  listItemFormatIcon: {
+    width: 20,
+    height: 20,
   },
   listItemMeta: {
     flex: 1,

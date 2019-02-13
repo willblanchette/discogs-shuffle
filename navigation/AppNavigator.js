@@ -2,6 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { createAppContainer, createStackNavigator } from 'react-navigation';
 import { Button } from 'react-native-elements';
+import { Foundation } from '@expo/vector-icons';
 
 import LibraryScreen from '../screens/LibraryScreen';
 import ReleaseScreen from '../screens/ReleaseScreen';
@@ -13,11 +14,12 @@ const LibraryStack = createStackNavigator({
   Library: {
     screen: LibraryScreen,
     navigationOptions: navigation => ({
-      title: 'Discogs Shuffle',
+      headerTitle: (
+        <Foundation name='shuffle' size={30} color='#fff' style={{marginLeft: 20}}></Foundation>
+      ),
       headerTitleStyle: {
         color: '#fff',
       },
-
       headerStyle: {
         backgroundColor: colors.primary,
         elevation: null,

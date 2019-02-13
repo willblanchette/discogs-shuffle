@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, View } from 'react-native';
+import { View } from 'react-native';
 import { createAppContainer, createStackNavigator } from 'react-navigation';
+import { Button } from 'react-native-elements';
 
 import LibraryScreen from '../screens/LibraryScreen';
 import ReleaseScreen from '../screens/ReleaseScreen';
@@ -24,8 +25,10 @@ const LibraryStack = createStackNavigator({
       headerRight: (
         <View style={{marginRight: 20}}>
           <Button
-            title='Shuffle'
-            color={colors.primary}
+            title='SHUFFLE'
+            type='outline'
+            titleStyle={{color: '#ffffff90'}}
+            buttonStyle={{borderColor: '#ffffff50'}}
             onPress={() => navigation.navigation.navigate('Shuffle', {})}></Button>
         </View>
       ),

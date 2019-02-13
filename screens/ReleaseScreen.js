@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   historyItemText: {
     fontSize: 16,
-    color: '#fff',
+    color: '#999',
     flex: 1,
   },
   historyItemButton: {

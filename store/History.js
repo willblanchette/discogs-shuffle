@@ -13,7 +13,7 @@ class HistoryStore {
 
             (Object.values(this.history)).forEach(release => {
                 release.forEach(item => {
-                    item.date = moment(item.date);
+                    item.date = moment.unix(item.date);
                 });
             });
         });
@@ -50,7 +50,7 @@ class HistoryStore {
 
         Object.values(history).forEach(release => {
             release.forEach(item => {
-                item = item.date = item.date.unix();
+                item.date = item.date.unix();
             });
         });
 

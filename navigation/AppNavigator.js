@@ -1,8 +1,8 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { createAppContainer, createStackNavigator } from 'react-navigation';
 import { Button } from 'react-native-elements';
-import { Foundation } from '@expo/vector-icons';
+import { Foundation, Ionicons } from '@expo/vector-icons';
 
 import LibraryScreen from '../screens/LibraryScreen';
 import ReleaseScreen from '../screens/ReleaseScreen';
@@ -15,23 +15,37 @@ const LibraryStack = createStackNavigator({
     screen: LibraryScreen,
     navigationOptions: navigation => ({
       headerTitle: (
-        <Foundation name='shuffle' size={30} color='#fff' style={{marginLeft: 20}}></Foundation>
+        <Foundation name='shuffle' size={30} color='#fff' style={[styles.titleIcon]}></Foundation>
       ),
-      headerTitleStyle: {
-        color: '#fff',
-      },
+      headerTitleStyle: styles.title,
       headerStyle: {
         backgroundColor: colors.primary,
         elevation: null,
       },
       headerRight: (
-        <View style={{marginRight: 20}}>
+        <View style={[styles.headerButtonsWrapper]}>
           <Button
             title='SHUFFLE'
             type='outline'
-            titleStyle={{color: '#ffffff90'}}
-            buttonStyle={{borderColor: '#ffffff50'}}
-            onPress={() => navigation.navigation.navigate('Shuffle', {})}></Button>
+            titleStyle={[styles.headerButtonTitle]}
+            buttonStyle={[styles.headerButton]}
+            onPress={() => navigation.navigation.navigate('Shuffle', {})}
+            iconRight={true}
+            icon={
+              <Ionicons name='md-shuffle' size={18} color='#ffffff90' style={[styles.headerButtonIcon]} ></Ionicons>
+            }
+            style={[styles.headerButton]}></Button>
+          <Button
+            type='outline'
+            title='SETTINGS'
+            titleStyle={[styles.headerButtonTitle]}
+            buttonStyle={[styles.headerButton]}
+            onPress={() => navigation.navigation.navigate('Settings', {})}
+            iconRight={true}
+            icon={
+              <Ionicons name='ios-settings' size={18} color='#ffffff90' style={[styles.headerButtonIcon]} ></Ionicons>
+            }
+            style={[styles.headerButton]}></Button>
         </View>
       ),
     })
@@ -41,9 +55,7 @@ const LibraryStack = createStackNavigator({
     navigationOptions: ({ navigation }) => {
       return {
         title: navigation.getParam('release').basic_information.title,
-        headerTitleStyle: {
-          color: '#fff',
-        },
+        headerTitleStyle: styles.title,
         headerTintColor: '#fff',
         headerStyle: {
           backgroundColor: colors.primary,
@@ -60,6 +72,29 @@ const LibraryStack = createStackNavigator({
     screen: ShuffleScreen,
     navigationOptions: {},
   }
-}, {})
+}, {});
+
+const styles = StyleSheet.create({
+  title: {
+      color: '#fff',
+  },
+  titleIcon: {
+    marginLeft: 20,
+  },
+  headerButtonTitle: {
+    color: '#ffffff90',
+  },
+  headerButtonsWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerButton: {
+    borderColor: '#ffffff50',
+    marginRight: 10,
+  },
+  headerButtonIcon: {
+    marginLeft: 10,
+  },
+});
 
 export default createAppContainer(LibraryStack, {});

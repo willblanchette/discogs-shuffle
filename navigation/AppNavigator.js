@@ -6,6 +6,7 @@ import LibraryScreen from '../screens/LibraryScreen';
 import ReleaseScreen from '../screens/ReleaseScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ShuffleScreen from '../screens/ShuffleScreen';
+import { colors } from '../util/Constants';
 
 const LibraryStack = createStackNavigator({
   Library: {
@@ -15,15 +16,16 @@ const LibraryStack = createStackNavigator({
       headerTitleStyle: {
         color: '#fff',
       },
+
       headerStyle: {
-        backgroundColor: '#4A99F0',
+        backgroundColor: colors.primary,
         elevation: null,
       },
       headerRight: (
         <View style={{marginRight: 20}}>
           <Button
             title='Shuffle'
-            color='#4A99F0'
+            color={colors.primary}
             onPress={() => navigation.navigation.navigate('Shuffle', {})}></Button>
         </View>
       ),
@@ -33,7 +35,15 @@ const LibraryStack = createStackNavigator({
     screen: ReleaseScreen,
     navigationOptions: ({ navigation }) => {
       return {
-        title: navigation.getParam('release').basic_information.title
+        title: navigation.getParam('release').basic_information.title,
+        headerTitleStyle: {
+          color: '#fff',
+        },
+        headerTintColor: '#fff',
+        headerStyle: {
+          backgroundColor: colors.primary,
+          elevation: null,
+        },
       }
     }
   },

@@ -5,14 +5,9 @@ import { ActivityIndicator, Button, FlatList, Image, Picker, StyleSheet, Text, T
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import  { withStoreContext } from '../StoreContext';
+import { blacklistedFormats, formatIcons, colors } from '../util/Constants';
 
-const blacklistedFormats = ['All Media'];
 const sortNames = ['Artist', 'Title'];
-const formatIcons = {
-  cassette: require('../assets/images/icons/cassette.png'),
-  cd: require('../assets/images/icons/cd.png'),
-  vinyl: require('../assets/images/icons/vinyl.png'),
-}
 const sortMethods = {
   Title: (a, b) => a.basic_information.title.localeCompare(b.basic_information.title),
   Artist: (a, b) => a.basic_information.artists[0].name.localeCompare(b.basic_information.artists[0].name),
@@ -41,7 +36,6 @@ class LibraryScreen extends Component {
   };
 
   onPressClearSearch = () => {
-    console.log('clear');
     this.setState({terms: ''});
   };
 
@@ -140,7 +134,7 @@ class LibraryScreen extends Component {
         </View>
         <Container style={[styles.list]}>
           {!this.props.store.library.releases
-            ? <ActivityIndicator color='#4a99f0' size="large"></ActivityIndicator>
+            ? <ActivityIndicator color={colors.primary} size="large"></ActivityIndicator>
             : <FlatList
                 refreshing={this.props.store.library.fetching}
                 onRefresh={() => this.props.store.library.fetch(true)}

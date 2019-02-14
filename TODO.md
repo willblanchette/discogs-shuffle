@@ -16,5 +16,3 @@
     - Lint code
     - Normalize whitespace
     - Clean up unused tests
-    - Final app icon / splash
-    - Adaptive app icon for android

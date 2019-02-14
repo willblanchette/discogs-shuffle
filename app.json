@@ -26,7 +26,11 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.collectivecognition.discogsshuffle"
+      "package": "com.collectivecognition.discogsshuffle",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon-adaptive-front.png",
+        "backgroundImage": "./assets/images/icon-adaptive-back.png"
+      }
     }
   }
 }

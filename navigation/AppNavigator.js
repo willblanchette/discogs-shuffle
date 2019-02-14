@@ -66,7 +66,17 @@ const LibraryStack = createStackNavigator({
   },
   Settings: {
     screen: SettingsScreen,
-    navigationOptions: {},
+    navigationOptions: ({ navigation }) => {
+      return {
+        title: 'Settings',
+        headerTitleStyle: styles.title,
+        headerTintColor: '#fff',
+        headerStyle: {
+          backgroundColor: colors.primary,
+          elevation: null,
+        },
+      }
+    }
   },
   Shuffle: {
     screen: ShuffleScreen,

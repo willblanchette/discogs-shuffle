@@ -23,6 +23,10 @@ class LibraryScreen extends Component {
       format: undefined,
       sort: sortNames[0],
     };
+
+    if (props.forceReload) {
+      this.props.store.library.fetch(true);
+    }
   };
 
   componentWillReact() {
